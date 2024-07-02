@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Playlist</title>
+</head>
+<body>
+    <video id="videoPlayer" autoplay controls>
+        <!-- Initial source (will be replaced dynamically) -->
+        <source src="" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <script>
+        // Read video URLs from a JSON file (videos.json)
+        fetch('videos.json')
+            .then(response => response.json())
+            .then(videoUrls => {
+                const videoPlayer = document.getElementById('videoPlayer');
+                let currentIndex = 0;
+
+                function loadNextVideo() {
+                    if (currentIndex < videoUrls.length) {
+                        videoPlayer.src = videoUrls[currentIndex];
+                        currentIndex = (currentIndex + 1) % videoUrls.length;
+                    }
+                }
+
+                // Load the first video
+                loadNextVideo();
+
+                // Listen for video end to load the next one
+                videoPlayer.addEventListener('ended', loadNextVideo);
+            })
+            .catch(error => console.error('Error loading video URLs:', error));
+    </script>
+</body>
+</html>
